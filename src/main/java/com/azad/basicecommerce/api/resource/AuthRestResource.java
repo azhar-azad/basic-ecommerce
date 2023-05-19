@@ -1,6 +1,7 @@
 package com.azad.basicecommerce.api.resource;
 
 import com.azad.basicecommerce.api.assembler.AppUserResponseModelAssembler;
+import com.azad.basicecommerce.model.address.Address;
 import com.azad.basicecommerce.model.auth.AppUserDto;
 import com.azad.basicecommerce.model.auth.AppUserResponse;
 import com.azad.basicecommerce.model.auth.LoginRequest;
@@ -81,5 +82,29 @@ public class AuthRestResource {
     public ResponseEntity<?> handleResetPassword(@RequestBody RegistrationRequest request) {
         authService.resetPassword(request.getPassword());
         return ResponseEntity.accepted().build();
+    }
+
+    @PostMapping(path = "/me/address")
+    public ResponseEntity<EntityModel<AppUserResponse>> createAddress(@Valid @RequestBody Address address) {
+
+        AppUserDto dto = new AppUserDto();
+        dto.setAddress(address);
+
+        AppUserDto updatedDto = authService.addAddress(dto);
+
+        return new ResponseEntity<>(assembler.toModel(modelMapper.map(updatedDto, AppUserResponse.class)),
+                HttpStatus.CREATED);
+    }
+
+    @PutMapping(path = "/me/address")
+    public ResponseEntity<EntityModel<AppUserResponse>> updateAddress(@Valid @RequestBody Address updatedAddress) {
+
+        AppUserDto dto = new AppUserDto();
+        dto.setAddress(updatedAddress);
+
+        AppUserDto updatedDto = authService.updateAddress(dto);
+
+        return new ResponseEntity<>(assembler.toModel(modelMapper.map(updatedDto, AppUserResponse.class)),
+                HttpStatus.OK);
     }
 }

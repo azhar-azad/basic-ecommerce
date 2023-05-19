@@ -1,13 +1,19 @@
 package com.azad.basicecommerce.model.auth;
 
+import com.azad.basicecommerce.model.address.AddressEntity;
+//import com.azad.basicecommerce.model.store.StoreEntity;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "users")
 public class AppUserEntity {
@@ -48,4 +54,10 @@ public class AppUserEntity {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private RoleEntity role = new RoleEntity();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<AddressEntity> addresses;
+
+//    @OneToMany(mappedBy = "storeOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    private StoreEntity store;
 }

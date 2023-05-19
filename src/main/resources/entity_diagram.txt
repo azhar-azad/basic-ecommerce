@@ -16,6 +16,7 @@
         - totalReview
         -- CategoryId (FK)
         ---- StoreId (FK) - Inventory
+        ---- WarehouseId (FK) - Inventory
 
     ## 1.2 CATEGORY
         - categoryName
@@ -42,4 +43,7 @@
         - discount
         ---- UserId(Store Admin Id) (FK) - Auth
 
-
+    ## 2.2 WAREHOUSE
+        - warehouseName
+        -- addressId (FK)
+        -- storeId (FK)

@@ -1,7 +1,10 @@
 package com.azad.basicecommerce.security;
 
 import com.azad.basicecommerce.common.ApiUtils;
+import com.azad.basicecommerce.model.address.Address;
+import com.azad.basicecommerce.model.address.AddressEntity;
 import com.azad.basicecommerce.model.auth.*;
+import com.azad.basicecommerce.repository.AddressRepository;
 import com.azad.basicecommerce.repository.AppUserRepository;
 import com.azad.basicecommerce.repository.RoleRepository;
 import com.azad.basicecommerce.security.jwt.JwtUtils;
@@ -40,6 +43,9 @@ public class AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private AddressRepository addressRepository;
 
     private final AppUserRepository appUserRepository;
     private final RoleRepository roleRepository;
@@ -99,6 +105,7 @@ public class AuthService {
         loggedInUser.setUpdatedAt(LocalDateTime.now());
 
         AppUserEntity updatedUser = appUserRepository.save(loggedInUser);
+
         return modelMapper.map(updatedUser, AppUserDto.class);
     }
 
@@ -136,5 +143,68 @@ public class AuthService {
     public ResponseEntity<Map<String, String>> generateTokenAndSend(String authenticatedUserId, HttpStatus statusToSend) {
         String token = jwtUtils.generateJwtToken(authenticatedUserId);
         return new ResponseEntity<>(Collections.singletonMap("TOKEN", token), statusToSend);
+    }
+
+    public AppUserDto addAddress(AppUserDto dtoWithAddress) {
+
+        AppUserEntity loggedInUser = getLoggedInUser();
+
+        Address address = dtoWithAddress.getAddress();
+        AddressEntity entity = modelMapper.map(address, AddressEntity.class);
+        entity.setUid(apiUtils.getHash("address",
+                address.getAddressType() + address.getApartment() + address.getHouse()
+                        + address.getSubDistrict() + address.getDistrict()));
+        entity.setUser(loggedInUser);
+
+        AddressEntity savedEntity = addressRepository.save(entity);
+
+        AppUserDto updatedDto = modelMapper.map(loggedInUser, AppUserDto.class);
+        updatedDto.setAddress(modelMapper.map(savedEntity, Address.class));
+
+        return updatedDto;
+    }
+
+    public AppUserDto updateAddress(AppUserDto updatedDto) {
+
+        Address updatedAddress = updatedDto.getAddress();
+        if (updatedAddress == null)
+            throw new RuntimeException("Invalid Request");
+
+        AppUserEntity loggedInUser = getLoggedInUser();
+
+        if (loggedInUser.getAddresses() == null || loggedInUser.getAddresses().size() == 0) {
+            return addAddress(updatedDto);
+        }
+
+        AddressEntity address = null;
+        for (AddressEntity addressEntity: loggedInUser.getAddresses()) {
+            if (addressEntity.getAddressType().equals(updatedAddress.getAddressType())) {
+                address = addressEntity;
+                break;
+            }
+        }
+
+        if (address == null)
+            return addAddress(updatedDto);
+
+        if (updatedAddress.getApartment() != null)
+            address.setApartment(updatedAddress.getApartment());
+        if (updatedAddress.getHouse() != null)
+            address.setHouse(updatedAddress.getHouse());
+        if (updatedAddress.getStreet() != null)
+            address.setStreet(updatedAddress.getStreet());
+        if (updatedAddress.getSubDistrict() != null)
+            address.setSubDistrict(updatedAddress.getSubDistrict());
+        if (updatedAddress.getDistrict() != null)
+            address.setDistrict(updatedAddress.getDistrict());
+        if (updatedAddress.getDivision() != null)
+            address.setDivision(updatedAddress.getDivision());
+
+        AddressEntity updatedEntity = addressRepository.save(address);
+
+        AppUserDto updatedAppUserDto = modelMapper.map(loggedInUser, AppUserDto.class);
+        updatedAppUserDto.setAddress(modelMapper.map(updatedEntity, Address.class));
+
+        return updatedAppUserDto;
     }
 }

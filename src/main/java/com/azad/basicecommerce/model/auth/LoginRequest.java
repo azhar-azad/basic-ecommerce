@@ -1,12 +1,15 @@
 package com.azad.basicecommerce.model.auth;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class LoginRequest {
 
     private String username;
