@@ -1,0 +1,45 @@
+#1 Product Service
+    ## 1.1 PRODUCT
+        - productName
+        - brand
+        - description
+        - pictureUrl
+        - price
+        - discount
+        - estimatedDeliveryTime
+        - returnPolicy
+        - warranty
+        - availableInStock
+        - lowStockThreshold
+        - averageRating
+        - totalRating
+        - totalReview
+        -- CategoryId (FK)
+        ---- StoreId (FK) - Inventory
+
+    ## 1.2 CATEGORY
+        - categoryName
+        -- ProductLineId (FK)
+
+    ## 1.3 PRODUCT_LINE
+        - productLineName
+
+    ## 1.4 REVIEW
+        - reviewText
+        -- ProductId (FK)
+        ---- UserId (FK) - Auth
+
+    ## 1.5 RATING
+        - ratingValue
+        -- ProductId (FK)
+        ---- UserId (FK) - Auth
+
+
+#2 Inventory Service
+    ## 2.1 STORE
+        - storeName
+        - pictureUrl
+        - discount
+        ---- UserId(Store Admin Id) (FK) - Auth
+
+

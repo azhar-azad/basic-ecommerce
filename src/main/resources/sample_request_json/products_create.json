@@ -1,0 +1,12 @@
+{
+  "productName": "Samsung Galaxy A52",
+  "brand": "Samsung",
+  "description": "Samsung midrange smartphone",
+  "pictureUrl": "http://www.samsung.com/a52",
+  "price": 34000,
+  "estimatedDeliveryTime": "5-7 days",
+  "availableInStock": "50",
+  "lowStockThreshold": "5",
+  "categoryUid": "category_66f4a992",
+  "storeUid": "store_9c0a2dda"
+}
