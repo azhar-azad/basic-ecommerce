@@ -1,6 +1,5 @@
 package com.azad.basicecommerce.common.generics;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

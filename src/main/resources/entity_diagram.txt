@@ -47,3 +47,13 @@
         - warehouseName
         -- addressId (FK)
         -- storeId (FK)
+
+#3 Shipping Service
+    ## 3.1 ADDRESS
+        - addressType
+        - apartment
+        - house
+        - street
+        - subDistrict
+        - district
+        - division

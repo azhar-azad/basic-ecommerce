@@ -2,6 +2,7 @@ package com.azad.basicecommerce.model.auth;
 
 import com.azad.basicecommerce.model.address.AddressEntity;
 //import com.azad.basicecommerce.model.store.StoreEntity;
+import com.azad.basicecommerce.model.store.StoreEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,6 +59,6 @@ public class AppUserEntity {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<AddressEntity> addresses;
 
-//    @OneToMany(mappedBy = "storeOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private StoreEntity store;
+    @OneToMany(mappedBy = "storeOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<StoreEntity> store;
 }

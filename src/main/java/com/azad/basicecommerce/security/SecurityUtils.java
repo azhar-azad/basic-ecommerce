@@ -1,5 +1,6 @@
 package com.azad.basicecommerce.security;
 
+import com.azad.basicecommerce.common.exceptions.UserNotFoundException;
 import com.azad.basicecommerce.model.auth.AppUserEntity;
 import com.azad.basicecommerce.repository.AppUserRepository;
 import lombok.Getter;
@@ -28,10 +29,10 @@ public class SecurityUtils {
     public AppUserEntity getUserByAuthBase(String usernameOrEmail) throws RuntimeException {
         if (isUsernameBasedAuth())
             return repository.findByUsername(usernameOrEmail).orElseThrow(
-                    () -> new RuntimeException("User not found with username: " + usernameOrEmail));
+                    () -> new UserNotFoundException("Unregistered User", "Identifier: " + usernameOrEmail));
         else if (isEmailBasedAuth())
             return repository.findByEmail(usernameOrEmail).orElseThrow(
-                    () -> new RuntimeException("User not found with email: " + usernameOrEmail));
+                    () -> new UserNotFoundException("Unregistered User", "Identifier: " + usernameOrEmail));
         else
             throw new RuntimeException("Unknown Authentication base configured. Valid auth_base values are USERNAME or EMAIL");
     }
