@@ -2,6 +2,7 @@ package com.azad.basicecommerce.model.address;
 
 import com.azad.basicecommerce.model.auth.AppUserEntity;
 //import com.azad.basicecommerce.model.warehouse.WarehouseEntity;
+import com.azad.basicecommerce.model.warehouse.WarehouseEntity;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -49,7 +50,7 @@ public class AddressEntity {
     @JoinColumn(name = "user_id")
     private AppUserEntity user;
 
-//    @OneToOne(cascade = CascadeType.ALL)
-//    @JoinColumn(name = "warehouse_id", referencedColumnName = "id")
-//    private WarehouseEntity warehouse;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "warehouse_id", referencedColumnName = "warehouse_id")
+    private WarehouseEntity warehouse;
 }

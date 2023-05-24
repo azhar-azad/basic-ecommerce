@@ -1,0 +1,13 @@
+{
+  "warehouseName": "Warehouse 1",
+  "storeUid": "store_67f46959",
+  "address": {
+    "addressType": "warehouse",
+    "apartment": "23/E",
+    "house": "Warehouse 1",
+    "street": "W1 Street",
+    "subDistrict": "W1",
+    "district": "Chittagong",
+    "division": "Chittagong"
+  }
+}

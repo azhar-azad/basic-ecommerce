@@ -149,6 +149,8 @@ public class AuthService {
 
         AppUserEntity loggedInUser = getLoggedInUser();
 
+        dtoWithAddress.getAddress().setAddressType(dtoWithAddress.getAddress().getAddressType().trim().toUpperCase());
+
         Address address = dtoWithAddress.getAddress();
         AddressEntity entity = modelMapper.map(address, AddressEntity.class);
         entity.setUid(apiUtils.getHash("address",
@@ -165,6 +167,8 @@ public class AuthService {
     }
 
     public AppUserDto updateAddress(AppUserDto updatedDto) {
+
+        updatedDto.getAddress().setAddressType(updatedDto.getAddress().getAddressType().trim().toUpperCase());
 
         Address updatedAddress = updatedDto.getAddress();
         if (updatedAddress == null)

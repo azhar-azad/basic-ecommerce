@@ -1,10 +1,12 @@
 package com.azad.basicecommerce.model.store;
 
 import com.azad.basicecommerce.model.auth.AppUserEntity;
+import com.azad.basicecommerce.model.warehouse.WarehouseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -33,6 +35,6 @@ public class StoreEntity {
     @JoinColumn(name = "store_owner_id")
     private AppUserEntity storeOwner;
 
-//    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    private List<WarehouseEntity> warehouses;
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<WarehouseEntity> warehouses;
 }

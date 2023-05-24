@@ -117,7 +117,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handleUnauthorizedAccessException(UnauthorizedAccessException ex, WebRequest request) {
 
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED, ex.getLocalizedMessage(),
-                "Valid access(s) are " + ex.getValidAccess() + ". Current user access is " + ex.getCurrentUserAccess());
+                "Logged in user doesn't have access or is not the owner of this resource. " +
+                        "Valid accesses are " + ex.getValidAccess());
         return new ResponseEntity<>(apiError, new HttpHeaders(), apiError.getStatus());
     }
 

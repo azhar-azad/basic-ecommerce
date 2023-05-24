@@ -1,4 +1,4 @@
-package com.azad.basicecommerce.service.store;
+package com.azad.basicecommerce.service.inventory.store;
 
 import com.azad.basicecommerce.common.ApiUtils;
 import com.azad.basicecommerce.common.PagingAndSorting;
