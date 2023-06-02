@@ -66,7 +66,33 @@ public class WarehouseRestResource implements GenericApiRestController<Warehouse
         if (page < 0) page = 0;
 
         List<WarehouseDto> dtosFromService = service.getAll(
-                new PagingAndSorting(page > 1 ? page - 1 : page, limit, sort, order));
+                new PagingAndSorting(page > 0 ? page - 1 : page, limit, sort, order));
+        if (dtosFromService == null || dtosFromService.size() == 0)
+            return ResponseEntity.noContent().build();
+
+        return new ResponseEntity<>(assembler.getCollectionModel(dtosFromService.stream()
+                        .map(dto -> modelMapper.map(dto, WarehouseResponse.class))
+                        .collect(Collectors.toList()),
+                new PagingAndSorting(page, limit, sort, order)),
+                HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/byStore/{storeUid}")
+    public ResponseEntity<CollectionModel<EntityModel<WarehouseResponse>>> getAllEntities(
+            @Valid @RequestParam(name = "page", defaultValue = "1") int page,
+            @Valid @RequestParam(name = "limit", defaultValue = "25") int limit,
+            @Valid @RequestParam(name = "sort", defaultValue = "") String sort,
+            @Valid @RequestParam(name = "order", defaultValue = "asc") String order,
+            @Valid @PathVariable("storeUid") String storeUid) {
+
+        apiUtils.printRequestInfo("/api/v1/inventoryservice/warehouses", "GET", "SELLER, ADMIN");
+
+        if (page < 0) page = 0;
+
+        List<WarehouseDto> dtosFromService = service.getAllByStore(storeUid,
+                new PagingAndSorting(page > 0 ? page - 1 : page, limit, sort, order));
+        if (dtosFromService == null || dtosFromService.size() == 0)
+            return ResponseEntity.noContent().build();
 
         return new ResponseEntity<>(assembler.getCollectionModel(dtosFromService.stream()
                         .map(dto -> modelMapper.map(dto, WarehouseResponse.class))

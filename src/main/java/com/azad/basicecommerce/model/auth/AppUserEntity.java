@@ -60,5 +60,5 @@ public class AppUserEntity {
     private List<AddressEntity> addresses;
 
     @OneToMany(mappedBy = "storeOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<StoreEntity> store;
+    private List<StoreEntity> stores;
 }

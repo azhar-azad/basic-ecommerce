@@ -54,22 +54,25 @@ public class ApiUtils {
             return PageRequest.of(ps.getPage(), ps.getLimit(), getSortAndOrder(ps.getSort(), ps.getOrder()));
     }
 
-    public String getHash(String entityName, String data) {
-        return hashSHA256(entityName, data + getSecureRandomString());
+    public String generateUserUid(String email, String username, String firstName, String lastName) {
+        return getHash("user", email + username + firstName + lastName);
     }
 
-    private int convertStringToInt(String strValue) {
-        try {
-            if (strValue == null)
-                return -1;
-            if (isNumeric(strValue)) {
-                return Integer.parseInt(strValue);
-            }
-            throw new RuntimeException(strValue + " is not numeric");
-        } catch (NumberFormatException ex) {
-            ex.printStackTrace();
-        }
-        return -1;
+    public String generateAddressUid(String addressType, String apartment, String house,
+                                     String subDistrict, String district) {
+        return getHash("address", addressType + apartment + house + subDistrict + district);
+    }
+
+    public String generateStoreUid(String storeName, String storeOwnerEmail) {
+        return getHash("store", storeName + storeOwnerEmail);
+    }
+
+    public String generateWarehouseUid(String warehouseName, String storeName) {
+        return getHash("warehouse", warehouseName + storeName);
+    }
+
+    private String getHash(String entityName, String data) {
+        return hashSHA256(entityName, data + getSecureRandomString());
     }
 
     private Sort getSortAndOrder(String sort, String order) {
@@ -83,10 +86,6 @@ public class ApiUtils {
             sortBy = sortBy.ascending();
 
         return sortBy;
-    }
-
-    private boolean isNumeric(String strValue) {
-        return strValue != null && strValue.matches("[0-9.]+");
     }
 
     private String hashSHA256(String entityName, String input) {
@@ -128,5 +127,23 @@ public class ApiUtils {
         }
 
         return sb.toString();
+    }
+
+    private boolean isNumeric(String strValue) {
+        return strValue != null && strValue.matches("[0-9.]+");
+    }
+
+    private int convertStringToInt(String strValue) {
+        try {
+            if (strValue == null)
+                return -1;
+            if (isNumeric(strValue)) {
+                return Integer.parseInt(strValue);
+            }
+            throw new RuntimeException(strValue + " is not numeric");
+        } catch (NumberFormatException ex) {
+            ex.printStackTrace();
+        }
+        return -1;
     }
 }

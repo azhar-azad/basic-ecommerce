@@ -69,8 +69,7 @@ public class AuthService {
 
         String encodedPass = passwordEncoder.encode(dto.getPassword());
         dto.setPassword(encodedPass);
-        dto.setUid(apiUtils.getHash("user", dto.getEmail() + dto.getUsername()
-                + dto.getFirstName() + dto.getLastName()));
+        dto.setUid(apiUtils.generateUserUid( dto.getEmail(), dto.getUsername(), dto.getFirstName(), dto.getLastName()));
 
         RoleEntity role = roleRepository.findByRoleName(roleName).orElseThrow(
                 () -> new RuntimeException("Role not found with name: " + roleName));
@@ -153,9 +152,8 @@ public class AuthService {
 
         Address address = dtoWithAddress.getAddress();
         AddressEntity entity = modelMapper.map(address, AddressEntity.class);
-        entity.setUid(apiUtils.getHash("address",
-                address.getAddressType() + address.getApartment() + address.getHouse()
-                        + address.getSubDistrict() + address.getDistrict()));
+        entity.setUid(apiUtils.generateAddressUid(address.getAddressType(), address.getApartment(),
+                address.getHouse(), address.getSubDistrict(), address.getDistrict()));
         entity.setUser(loggedInUser);
 
         AddressEntity savedEntity = addressRepository.save(entity);

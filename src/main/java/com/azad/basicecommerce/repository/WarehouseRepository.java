@@ -13,5 +13,5 @@ public interface WarehouseRepository extends PagingAndSortingRepository<Warehous
 
     Optional<WarehouseEntity> findByUid(String uid);
 
-    Optional<List<WarehouseEntity>> findByStoreUid(String storeUid, Pageable pageable);
+    Optional<List<WarehouseEntity>> findByStoreId(Long storeId, Pageable pageable);
 }

@@ -17,10 +17,14 @@ import com.azad.basicecommerce.repository.WarehouseRepository;
 import com.azad.basicecommerce.security.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class WarehouseServiceImpl implements WarehouseService {
@@ -67,7 +71,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         }
 
         WarehouseEntity entity = modelMapper.map(dto, WarehouseEntity.class);
-        entity.setUid(apiUtils.getHash("warehouse", dto.getWarehouseName() + store.getStoreName()));
+        entity.setUid(apiUtils.generateWarehouseUid(entity.getWarehouseName(), store.getStoreName()));
         entity.setStore(store);
         entity.setAddress(null);
 
@@ -88,37 +92,138 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     @Override
     public List<WarehouseDto> getAll(PagingAndSorting ps) {
-        return null;
+
+        apiUtils.logInfo("*** WAREHOUSE :: GET ALL BY USER ***");
+
+        AppUserEntity loggedInUser = authService.getLoggedInUser();
+        List<Long> storeIds = loggedInUser.getStores().stream()
+                .map(StoreEntity::getId).collect(Collectors.toList());
+        List<WarehouseEntity> entitiesFromDb = new ArrayList<>();
+        for (Long storeId: storeIds) {
+            Optional<List<WarehouseEntity>> byStoreId = repository.findByStoreId(storeId, apiUtils.getPageable(ps));
+            byStoreId.ifPresent(entitiesFromDb::addAll);
+        }
+        if (entitiesFromDb.size() == 0)
+            return null;
+
+        return entitiesFromDb.stream()
+                .map(entity -> {
+                    WarehouseDto dto = modelMapper.map(entity, WarehouseDto.class);
+                    dto.setAddress(modelMapper.map(entity.getAddress(), Address.class));
+                    dto.setStore(modelMapper.map(entity.getStore(), Store.class));
+                    return dto;
+                }).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WarehouseDto> getAllByStore(String storeUid, PagingAndSorting ps) {
+
+        apiUtils.logInfo("*** WAREHOUSE :: GET ALL BY STORE ***");
+
+        StoreEntity store = storeRepository.findByUid(storeUid).orElseThrow(
+                () -> new ResourceNotFoundException("Invalid UID", "WAREHOUSE", "uid = " + storeUid));
+
+        AppUserEntity loggedInUser = authService.getLoggedInUser();
+        if (loggedInUserIsNotOwner(store.getStoreOwner().getId(), loggedInUser.getId())) {
+            apiUtils.logError("*** Logged in user does not have authorization to get this warehouse data ***");
+            throw new UnauthorizedAccessException("Unauthorized Access", loggedInUser.getRole().getRoleName(), "SELLER, ADMIN");
+        }
+
+        Optional<List<WarehouseEntity>> byStoreId = repository.findByStoreId(store.getId(), apiUtils.getPageable(ps));
+
+        return byStoreId.map(warehouseEntities -> warehouseEntities.stream()
+                .map(entity -> {
+                    WarehouseDto dto = modelMapper.map(entity, WarehouseDto.class);
+                    dto.setAddress(modelMapper.map(entity.getAddress(), Address.class));
+                    dto.setStore(modelMapper.map(entity.getStore(), Store.class));
+                    return dto;
+                }).collect(Collectors.toList())).orElse(null);
+
     }
 
     @Override
     public WarehouseDto getById(Long id) {
-        return null;
+        throw new RuntimeException("Method should not be used.");
     }
 
     @Override
     public WarehouseDto getByUid(String uid) {
-        return null;
+
+        apiUtils.logInfo("*** WAREHOUSE :: GET BY UID ***");
+
+        AppUserEntity loggedInUser = authService.getLoggedInUser();
+
+        WarehouseEntity entity = repository.findByUid(uid).orElseThrow(
+                () -> new ResourceNotFoundException("Invalid UID", "WAREHOUSE", "uid = " + uid));
+
+        if (!loggedInUser.getStores().contains(entity.getStore())) {
+            return null;
+        }
+
+        WarehouseDto dto = modelMapper.map(entity, WarehouseDto.class);
+        dto.setAddress(modelMapper.map(entity.getAddress(), Address.class));
+        dto.setStore(modelMapper.map(entity.getStore(), Store.class));
+
+        return dto;
     }
 
     @Override
     public WarehouseDto updateById(Long id, WarehouseDto updatedDto) {
-        return null;
+        throw new RuntimeException("Method should not be used.");
     }
 
     @Override
     public WarehouseDto updateByUid(String uid, WarehouseDto updatedDto) {
-        return null;
+
+        apiUtils.logInfo("*** WAREHOUSE :: UPDATE BY UID ***");
+
+        AppUserEntity loggedInUser = authService.getLoggedInUser();
+
+        WarehouseEntity entity = repository.findByUid(uid).orElseThrow(
+                () -> new ResourceNotFoundException("Invalid UID", "WAREHOUSE", "uid = " + uid));
+
+        if (!loggedInUser.getStores().contains(entity.getStore())) {
+            apiUtils.logError("*** Logged in user does not have authorization to update this warehouse data ***");
+            throw new UnauthorizedAccessException("Unauthorized Access", loggedInUser.getRole().getRoleName(), "SELLER, ADMIN");
+        }
+
+        if (updatedDto.getWarehouseName() != null)
+            entity.setWarehouseName(updatedDto.getWarehouseName());
+        entity.setUid(apiUtils.generateWarehouseUid(entity.getWarehouseName(), entity.getStore().getStoreName()));
+
+        WarehouseEntity updatedEntity = repository.save(entity);
+        WarehouseDto savedDto = modelMapper.map(updatedEntity, WarehouseDto.class);
+
+        if (updatedDto.getAddress() != null) {
+            updatedDto.getAddress().setAddressType(updatedDto.getAddress().getAddressType().trim().toUpperCase());
+            AddressEntity savedAddress = saveAddress(updatedDto.getAddress(), updatedEntity);
+            savedDto.setAddress(modelMapper.map(savedAddress, Address.class));
+        }
+
+        return savedDto;
     }
 
     @Override
     public void deleteById(Long id) {
-
+        throw new RuntimeException("Method should not be used.");
     }
 
     @Override
     public void deleteByUid(String uid) {
 
+        apiUtils.logInfo("*** WAREHOUSE :: DELETE BY UID ***");
+
+        AppUserEntity loggedInUser = authService.getLoggedInUser();
+
+        WarehouseEntity entity = repository.findByUid(uid).orElseThrow(
+                () -> new ResourceNotFoundException("Invalid UID", "WAREHOUSE", "uid = " + uid));
+
+        if (!loggedInUser.getStores().contains(entity.getStore())) {
+            apiUtils.logError("*** Logged in user does not have authorization to delete this warehouse data ***");
+            throw new UnauthorizedAccessException("Unauthorized Access", loggedInUser.getRole().getRoleName(), "SELLER, ADMIN");
+        }
+
+        repository.delete(entity);
     }
 
     @Override
@@ -133,9 +238,8 @@ public class WarehouseServiceImpl implements WarehouseService {
 
     private AddressEntity saveAddress(Address address, WarehouseEntity warehouse) {
         AddressEntity entity = modelMapper.map(address, AddressEntity.class);
-        entity.setUid(apiUtils.getHash("address",
-                address.getAddressType() + address.getApartment() + address.getHouse()
-                        + address.getSubDistrict() + address.getDistrict()));
+        entity.setUid(apiUtils.generateAddressUid(address.getAddressType(), address.getApartment(),
+                address.getHouse(), address.getSubDistrict(), address.getDistrict()));
         entity.setWarehouse(warehouse);
 
         return addressRepository.save(entity);

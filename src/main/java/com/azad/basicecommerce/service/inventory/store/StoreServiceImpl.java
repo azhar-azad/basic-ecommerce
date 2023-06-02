@@ -67,7 +67,7 @@ public class StoreServiceImpl implements StoreService {
             dto.setDiscount(0.0);
 
         StoreEntity entityFromReq = modelMapper.map(dto, StoreEntity.class);
-        entityFromReq.setUid(apiUtils.getHash("store", dto.getStoreName() + storeOwner.getEmail()));
+        entityFromReq.setUid(apiUtils.generateStoreUid( dto.getStoreName(), storeOwner.getEmail()));
         entityFromReq.setStoreOwner(storeOwner);
 
         StoreEntity savedEntity = repository.save(entityFromReq);
@@ -147,7 +147,7 @@ public class StoreServiceImpl implements StoreService {
             entityFromDb.setPictureUrl(updatedDto.getPictureUrl());
         if (updatedDto.getDiscount() != null)
             entityFromDb.setDiscount(updatedDto.getDiscount());
-        entityFromDb.setUid(apiUtils.getHash("store", entityFromDb.getStoreName() + entityFromDb.getStoreOwner().getEmail()));
+        entityFromDb.setUid(apiUtils.generateStoreUid(entityFromDb.getStoreName(), entityFromDb.getStoreOwner().getEmail()));
 
         StoreDto savedDto = modelMapper.map(repository.save(entityFromDb), StoreDto.class);
         savedDto.setStoreOwner(modelMapper.map(loggedInUser, AppUser.class));
