@@ -43,7 +43,7 @@ public class StoreRestResource implements GenericApiRestController<StoreRequest,
     @Override
     public ResponseEntity<EntityModel<StoreResponse>> createEntity(@Valid @RequestBody StoreRequest request) {
 
-        apiUtils.printRequestInfo("/api/v1/inventory/stores", "POST", "USER, SELLER");
+        apiUtils.printRequestInfo("/api/v1/inventoryservice/stores", "POST", "USER, SELLER");
 
         StoreDto dto = modelMapper.map(request, StoreDto.class);
 
