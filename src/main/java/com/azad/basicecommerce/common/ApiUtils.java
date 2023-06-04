@@ -25,7 +25,7 @@ public class ApiUtils {
     @Value("${default_sort_order}")
     private String defaultOrder;
 
-    private final Logger LOG = LoggerFactory.getLogger(ApiUtils.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ApiUtils.class);
 
     public void printRequestInfo(String url, String method, String hasAccess) {
         LOG.info("*** REQUEST RECEIVED ***");
@@ -55,24 +55,42 @@ public class ApiUtils {
     }
 
     public String generateUserUid(String email, String username, String firstName, String lastName) {
-        return getHash("user", email + username + firstName + lastName);
+        return generateUid("user", email, username, firstName, lastName);
     }
 
     public String generateAddressUid(String addressType, String apartment, String house,
                                      String subDistrict, String district) {
-        return getHash("address", addressType + apartment + house + subDistrict + district);
+        return generateUid("address", addressType, apartment, house, subDistrict, district);
     }
 
     public String generateStoreUid(String storeName, String storeOwnerEmail) {
-        return getHash("store", storeName + storeOwnerEmail);
+        return generateUid("store", storeName, storeOwnerEmail);
     }
 
     public String generateWarehouseUid(String warehouseName, String storeName) {
-        return getHash("warehouse", warehouseName + storeName);
+        return generateUid("warehouse", warehouseName, storeName);
     }
 
-    private String getHash(String entityName, String data) {
-        return hashSHA256(entityName, data + getSecureRandomString());
+    public String generateCategoryUid(String categoryName) {
+        return generateUid("category", categoryName);
+    }
+
+    public String generateProductUid(String productName, String brand, String price, String storeName) {
+        return generateUid("product", productName, brand, price, storeName);
+    }
+
+    public String generateRatingUid(String ratingValue, String productUid, String userUid) {
+        return generateUid("rating", ratingValue, productUid, userUid);
+    }
+
+    public String generateReviewUid(String reviewText, String productUid, String userUid) {
+        return generateUid("review", reviewText, productUid, userUid);
+    }
+
+    private String generateUid(String entityCode, String... properties) {
+        StringBuilder sb = new StringBuilder();
+        Arrays.stream(properties).forEach(sb::append);
+        return hashSHA256(entityCode, sb + getSecureRandomString());
     }
 
     private Sort getSortAndOrder(String sort, String order) {
@@ -108,7 +126,7 @@ public class ApiUtils {
             sb.append(hex);
         }
 
-        return entityName + "_" + sb.toString();
+        return entityName + "_" + sb;
     }
 
     private String getSecureRandomString() {

@@ -2,6 +2,8 @@ package com.azad.basicecommerce.model.auth;
 
 import com.azad.basicecommerce.model.address.AddressEntity;
 //import com.azad.basicecommerce.model.store.StoreEntity;
+import com.azad.basicecommerce.model.rating.RatingEntity;
+import com.azad.basicecommerce.model.review.ReviewEntity;
 import com.azad.basicecommerce.model.store.StoreEntity;
 import lombok.Data;
 import lombok.Getter;
@@ -61,4 +63,10 @@ public class AppUserEntity {
 
     @OneToMany(mappedBy = "storeOwner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<StoreEntity> stores;
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<RatingEntity> ratings;
+
+    @OneToMany(mappedBy = "reviewer", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ReviewEntity> reviews;
 }

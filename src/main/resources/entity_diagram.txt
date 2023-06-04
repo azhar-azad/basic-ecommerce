@@ -6,7 +6,7 @@
         - pictureUrl
         - price
         - discount
-        - estimatedDeliveryTime
+        - estDeliveryTimeInDays
         - returnPolicy
         - warranty
         - availableInStock
