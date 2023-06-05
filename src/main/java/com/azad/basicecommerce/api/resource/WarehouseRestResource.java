@@ -7,7 +7,7 @@ import com.azad.basicecommerce.common.generics.GenericApiRestController;
 import com.azad.basicecommerce.model.warehouse.WarehouseDto;
 import com.azad.basicecommerce.model.warehouse.WarehouseRequest;
 import com.azad.basicecommerce.model.warehouse.WarehouseResponse;
-import com.azad.basicecommerce.service.inventory.warehouse.WarehouseService;
+import com.azad.basicecommerce.service.inventoryservice.warehouse.WarehouseService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;

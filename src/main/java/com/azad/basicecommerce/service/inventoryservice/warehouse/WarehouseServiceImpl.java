@@ -1,4 +1,4 @@
-package com.azad.basicecommerce.service.inventory.warehouse;
+package com.azad.basicecommerce.service.inventoryservice.warehouse;
 
 import com.azad.basicecommerce.common.ApiUtils;
 import com.azad.basicecommerce.common.PagingAndSorting;
@@ -17,7 +17,6 @@ import com.azad.basicecommerce.repository.WarehouseRepository;
 import com.azad.basicecommerce.security.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -60,6 +59,7 @@ public class WarehouseServiceImpl implements WarehouseService {
         String roleName = loggedInUser.getRole().getRoleName();
         if (!roleName.equalsIgnoreCase("SELLER") && !roleName.equalsIgnoreCase("ADMIN")) {
             apiUtils.logError("*** Only SELLER or ADMIN can create a new Warehouse ***");
+            throw new UnauthorizedAccessException("Unauthorized Access", roleName, "SELLER, ADMIN");
         }
 
         StoreEntity store = storeRepository.findByUid(dto.getStoreUid()).orElseThrow(

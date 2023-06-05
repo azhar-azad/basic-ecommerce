@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface ProductRepository extends PagingAndSortingRepository<ProductEntity, Long> {
 
     Optional<ProductEntity> findByUid(String uid);
+    Optional<List<ProductEntity>> findByStoreUid(String storeUid, Pageable pageable);
     Optional<List<ProductEntity>> findByCategoryUid(String categoryUid, Pageable pageable);
 }

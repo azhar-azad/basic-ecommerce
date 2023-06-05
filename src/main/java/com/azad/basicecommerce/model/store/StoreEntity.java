@@ -1,6 +1,7 @@
 package com.azad.basicecommerce.model.store;
 
 import com.azad.basicecommerce.model.auth.AppUserEntity;
+import com.azad.basicecommerce.model.product.ProductEntity;
 import com.azad.basicecommerce.model.warehouse.WarehouseEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,4 +38,7 @@ public class StoreEntity {
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<WarehouseEntity> warehouses;
+
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<ProductEntity> products;
 }

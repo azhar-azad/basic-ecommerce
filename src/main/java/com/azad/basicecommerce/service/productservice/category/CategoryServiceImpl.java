@@ -1,4 +1,4 @@
-package com.azad.basicecommerce.service.product.category;
+package com.azad.basicecommerce.service.productservice.category;
 
 import com.azad.basicecommerce.common.ApiUtils;
 import com.azad.basicecommerce.common.PagingAndSorting;

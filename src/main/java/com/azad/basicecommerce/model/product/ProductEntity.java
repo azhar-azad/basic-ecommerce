@@ -3,6 +3,7 @@ package com.azad.basicecommerce.model.product;
 import com.azad.basicecommerce.model.category.CategoryEntity;
 import com.azad.basicecommerce.model.rating.RatingEntity;
 import com.azad.basicecommerce.model.review.ReviewEntity;
+import com.azad.basicecommerce.model.store.StoreEntity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -64,6 +65,10 @@ public class ProductEntity {
 
     @Column(name = "total_review")
     private Long totalReview;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private StoreEntity store;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")

@@ -1,12 +1,13 @@
 {
-  "productName": "Samsung Galaxy A52",
-  "brand": "Samsung",
-  "description": "Samsung midrange smartphone",
-  "pictureUrl": "http://www.samsung.com/a52",
-  "price": 34000,
-  "estimatedDeliveryTime": "5-7 days",
-  "availableInStock": "50",
+  "productName": "OnePlus Buds Pro 2",
+  "brand": "OnePlus",
+  "description": "OnePlus Buds Pro 2 Black Color",
+  "pictureUrl": "http://www.oneplus.com/budspro2",
+  "price": 14990,
+  "estDeliveryTimeInDays": 5,
+  "availableInStock": "30",
   "lowStockThreshold": "5",
-  "categoryUid": "category_66f4a992",
-  "storeUid": "store_9c0a2dda"
+  "returnPolicy": "No return",
+  "categoryUid": "category_01644a2a",
+  "storeUid": "store_15c18099"
 }

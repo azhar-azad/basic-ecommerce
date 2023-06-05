@@ -7,7 +7,7 @@ import com.azad.basicecommerce.common.generics.GenericApiRestController;
 import com.azad.basicecommerce.model.store.StoreDto;
 import com.azad.basicecommerce.model.store.StoreRequest;
 import com.azad.basicecommerce.model.store.StoreResponse;
-import com.azad.basicecommerce.service.inventory.store.StoreService;
+import com.azad.basicecommerce.service.inventoryservice.store.StoreService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;

@@ -11,4 +11,5 @@ public class ProductDto extends Product {
 
     private Long id;
     private String categoryUid;
+    private String storeUid;
 }
