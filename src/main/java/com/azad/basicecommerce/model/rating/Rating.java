@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 @NoArgsConstructor
@@ -15,6 +17,7 @@ import javax.validation.constraints.NotNull;
 public class Rating extends GenericApiModel {
 
     @NotNull(message = "Rating value cannot be null")
-    @EnumValidator(enumClass = RatingValues.class, message = "Rating value is not valid")
+    @Min(1)
+    @Max(5)
     protected Integer ratingValue;
 }

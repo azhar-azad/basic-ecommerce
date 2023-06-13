@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface RatingRepository extends PagingAndSortingRepository<RatingEntity, Long> {
 
     Optional<RatingEntity> findByUid(String uid);
-    Optional<List<RatingEntity>> findByProductUid(String productUid, Pageable pageable);
-    Optional<List<RatingEntity>> findByUserUid(String userUid, Pageable pageable);
+    Optional<List<RatingEntity>> findByProductId(Long productId, Pageable pageable);
+    Optional<List<RatingEntity>> findByUserId(Long userId, Pageable pageable);
 }
