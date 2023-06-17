@@ -12,6 +12,6 @@ import java.util.Optional;
 public interface ReviewRepository extends PagingAndSortingRepository<ReviewEntity, Long> {
 
     Optional<ReviewEntity> findByUid(String uid);
-    Optional<List<ReviewEntity>> findByProductUid(String productUid, Pageable pageable);
-    Optional<List<ReviewEntity>> findByReviewerUid(String reviewerUid, Pageable pageable);
+    Optional<List<ReviewEntity>> findByProductId(Long productId, Pageable pageable);
+    Optional<List<ReviewEntity>> findByReviewerId(Long reviewerId, Pageable pageable);
 }
